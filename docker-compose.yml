@@ -22,12 +22,6 @@
 
 version: "3"
 services:
-  spring-boot-admin:
-    build: spring-boot-admin
-    image: lakesidemutual/spring-boot-admin
-    ports:
-      - "9000:9000"
-
   customer-core:
     build: customer-core
     image: lakesidemutual/customer-core
@@ -58,64 +52,3 @@ services:
       - "REACT_APP_POLICY_MANAGEMENT_FRONTEND=http://localhost:3010"
     ports:
       - "3020:80"
-
-  policy-management-backend:
-    build: policy-management-backend
-    image: lakesidemutual/policy-management-backend
-    depends_on:
-      - customer-core
-    environment:
-      - "CUSTOMERCORE_BASEURL=http://customer-core:8110"
-      - "SPRING_BOOT_ADMIN_CLIENT_URL=http://spring-boot-admin:9000"
-    ports:
-      - "8090:8090"
-      - "61613:61613"
-      - "61616:61616"
-
-  policy-management-frontend:
-    build: policy-management-frontend
-    image: lakesidemutual/policy-management-frontend
-    depends_on:
-      - policy-management-backend
-    environment:
-      - "VUE_APP_POLICY_MANAGEMENT_BACKEND=http://localhost:8090"
-    ports:
-      - "3010:80"
-
-  customer-self-service-backend:
-    build: customer-self-service-backend
-    image: lakesidemutual/customer-self-service-backend
-    depends_on:
-      - customer-core
-      - policy-management-backend
-    environment:
-      - "CUSTOMERCORE_BASEURL=http://customer-core:8110"
-      - "POLICYMANAGEMENT_TCPBROKERBINDADDRESS=tcp://policy-management-backend:61616"
-      - "SPRING_BOOT_ADMIN_CLIENT_URL=http://spring-boot-admin:9000"
-    ports:
-      - "8080:8080"
-
-  customer-self-service-frontend:
-    build: customer-self-service-frontend
-    image: lakesidemutual/customer-self-service-frontend
-    depends_on:
-      - customer-self-service-backend
-      - customer-management-backend
-      - policy-management-backend
-    environment:
-      - "REACT_APP_CUSTOMER_SELF_SERVICE_BACKEND=http://localhost:8080"
-      - "REACT_APP_POLICY_MANAGEMENT_BACKEND=http://localhost:8090"
-      - "REACT_APP_CUSTOMER_MANAGEMENT_BACKEND=http://localhost:8100"
-    ports:
-      - "3000:80"
-      
-  risk-management-server:
-    build: risk-management-server
-    image: lakesidemutual/risk-management-server
-    depends_on:
-      - policy-management-backend
-    environment:
-      - "ACTIVEMQ_HOST=policy-management-backend"
-      - "ACTIVEMQ_PORT=61613"
-    ports:
-      - "50051:50051"
