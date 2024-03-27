@@ -22,6 +22,12 @@
 
 version: "3"
 services:
+  spring-boot-admin:
+    build: spring-boot-admin
+    image: lakesidemutual/spring-boot-admin
+    ports:
+      - "9000:9000"
+
   customer-core:
     build: customer-core
     image: lakesidemutual/customer-core
@@ -47,8 +53,6 @@ services:
     depends_on:
       - customer-management-backend
     environment:
-      - "REACT_APP_CUSTOMER_SELF_SERVICE_BACKEND=http://localhost:8080"
       - "REACT_APP_CUSTOMER_MANAGEMENT_BACKEND=http://localhost:8100"
-      - "REACT_APP_POLICY_MANAGEMENT_FRONTEND=http://localhost:3010"
     ports:
       - "3020:80"
