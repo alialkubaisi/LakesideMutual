@@ -50,9 +50,14 @@ RUN npm install
 COPY . ./
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
+# Use a lightweight base image with Nginx installed
+FROM nginx:1.21.3
+
+# Copy the frontend application to the Nginx directory
+COPY --from=build /app/customer-management-frontend/dist/customer-management-frontend /usr/share/nginx/html
+
+# Expose the necessary ports
 EXPOSE 80
-WORKDIR /usr/share/nginx/html
+
+# Set the entrypoint command to start Nginx
 CMD ["nginx", "-g", "daemon off;"]
