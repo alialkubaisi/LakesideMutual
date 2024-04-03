@@ -42,22 +42,21 @@ CMD ["java", "-jar", "customer-core-0.0.1-SNAPSHOT.jar"]
 CMD ["java", "-jar", "customer-management-backend-0.0.1-SNAPSHOT.jar"]
 
 # Build the frontend application
-FROM node:16 as build
-WORKDIR /app/customer-management-frontend
-COPY package.json ./
-COPY package-lock.json ./
+# Use a base image with Node.js installed
+
+FROM node:16.13.0 AS frontend
+# Set the working directory
+WORKDIR /app
+# Copy the package.json and package-lock.json files
+COPY customer-management-frontend/package*.json .
+# Install the dependencies
 RUN npm install
-COPY . ./
+# Copy the source code
+COPY customer-management-frontend .
+
+# Build the application
 RUN npm run build
-
-# Use a lightweight base image with Nginx installed
 FROM nginx:1.21.3
-
-# Copy the frontend application to the Nginx directory
-COPY --from=build /app/customer-management-frontend/dist/customer-management-frontend /usr/share/nginx/html
-
-# Expose the necessary ports
+COPY --from=frontend /app/build /usr/share/nginx/html
 EXPOSE 80
-
-# Set the entrypoint command to start Nginx
 CMD ["nginx", "-g", "daemon off;"]
