@@ -29,8 +29,8 @@ FROM adoptopenjdk:11-jre-hotspot
 WORKDIR /app
 
 # Copy the JAR files from the builder stage
-COPY --from=builder /app/customer-core/target/customer-core.jar .
-COPY --from=builder /app/customer-management-backend/target/customer-management-backend.jar .
+COPY --from=builder /app/customer-core/target/customer-core-0.0.1-SNAPSHOT.jar .
+COPY --from=builder /app/customer-management-backend/target/customer-management-backend-0.0.1-SNAPSHOT.jar .
 
 # Expose the necessary ports
 EXPOSE 8080
