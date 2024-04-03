@@ -1,6 +1,7 @@
 # build spring boot application from customer-core and customer-management-backend
 # and create a docker image
 # Use a base image with Java and Maven installed
+
 FROM maven:3.8.4-openjdk-11-slim AS builder
 
 # Set the working directory
@@ -36,4 +37,18 @@ COPY --from=builder /app/customer-management-backend/target/customer-management-
 EXPOSE 8080
 
 # Set the entrypoint command to run the applications
-CMD ["java", "-jar", "customer-core.jar"]
+CMD ["java", "-jar", "customer-core-0.0.1-SNAPSHOT.jar"]
+
+CMD ["java", "-jar", "customer-management-backend-0.0.1-SNAPSHOT.jar"]
+
+# Build the frontend application
+COPY customer-management-frontend /app/customer-management-frontend
+WORKDIR /app/customer-management-frontend
+RUN npm install
+RUN npm run build
+
+# Serve the frontend application
+FROM nginx:latest
+COPY --from=builder /app/customer-management-frontend/build /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
