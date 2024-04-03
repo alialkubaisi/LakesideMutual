@@ -1,20 +1,39 @@
-# Build stage for Spring Boot application
-# build maven for customer-core, then build customer-management-backend and then build customer-management-frontend
-FROM maven:3.6.3-jdk-11 AS build
-COPY src /home/app/customer-core/src
-COPY pom.xml /home/app/customer-core
-RUN mvn -f /home/app/customer-core/pom.xml clean package
+# build spring boot application from customer-core and customer-management-backend
+# and create a docker image
+# Use a base image with Java and Maven installed
+FROM maven:3.8.4-openjdk-11-slim AS builder
 
-COPY src /home/app/customer-management-backend/src
-COPY pom.xml /home/app/customer-management-backend
-RUN mvn -f /home/app/customer-management-backend/pom.xml clean package
+# Set the working directory
+WORKDIR /app
 
-# Package stage with OpenJDK JRE
-FROM openjdk:11-jre-slim
-COPY --from=build /home/app/customer-core/target/customer-core-0.0.1-SNAPSHOT.jar /usr/local/lib/customer-core.jar
+# Copy the pom.xml files
+COPY customer-core/pom.xml customer-core/
+COPY customer-management-backend/pom.xml customer-management-backend/
+
+# Build the dependencies
+RUN mvn -B dependency:go-offline -f customer-core/pom.xml
+RUN mvn -B dependency:go-offline -f customer-management-backend/pom.xml
+
+# Copy the source code
+COPY customer-core/src customer-core/src
+COPY customer-management-backend/src customer-management-backend/src
+
+# Build the applications
+RUN mvn -B clean package -DskipTests -f customer-core/pom.xml
+RUN mvn -B clean package -DskipTests -f customer-management-backend/pom.xml
+
+# Use a lightweight base image with Java installed
+FROM adoptopenjdk:11-jre-hotspot
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the JAR files from the builder stage
+COPY --from=builder /app/customer-core/target/customer-core.jar .
+COPY --from=builder /app/customer-management-backend/target/customer-management-backend.jar .
+
+# Expose the necessary ports
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/usr/local/lib/customer-core.jar"]
 
-COPY --from=build /home/app/customer-management-backend/target/customer-management-backend-0.0.1-SNAPSHOT.jar /usr/local/lib/customer-management-backend.jar
-EXPOSE 8081
-ENTRYPOINT ["java", "-jar", "/usr/local/lib/customer-management-backend.jar"]
+# Set the entrypoint command to run the applications
+CMD ["java", "-jar", "customer-core.jar"]
