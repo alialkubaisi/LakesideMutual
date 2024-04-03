@@ -42,13 +42,22 @@ CMD ["java", "-jar", "customer-core-0.0.1-SNAPSHOT.jar"]
 CMD ["java", "-jar", "customer-management-backend-0.0.1-SNAPSHOT.jar"]
 
 # Build the frontend application
-COPY customer-management-frontend /app/customer-management-frontend
+FROM node:16 as build
 WORKDIR /app/customer-management-frontend
+COPY package.json ./
+COPY package-lock.json ./
 RUN npm install
+COPY . ./
 RUN npm run build
 
-# Serve the frontend application
-FROM nginx:latest
-COPY --from=builder /app/customer-management-frontend/build /usr/share/nginx/html
+FROM nginx:stable-alpine
+COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /usr/src/app/build /usr/share/nginx/html
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+WORKDIR /usr/share/nginx/html
+
+RUN apk add --no-cache nodejs npm
+RUN npm install -g @beam-australia/react-env@3.1.1
+ADD .env ./
+ADD entrypoint.sh /var/entrypoint.sh
+ENTRYPOINT ["/var/entrypoint.sh"]
