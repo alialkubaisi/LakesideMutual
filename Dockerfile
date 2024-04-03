@@ -50,11 +50,9 @@ RUN npm install
 COPY . ./
 RUN npm run build
 
-FROM ghcr.io/railwayapp/nginx:stable-alpine
+FROM nginx:stable-alpine
 COPY nginx.vh.default.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /usr/src/app/build /usr/share/nginx/html
 EXPOSE 80
 WORKDIR /usr/share/nginx/html
-
-# Start Nginx server
 CMD ["nginx", "-g", "daemon off;"]
