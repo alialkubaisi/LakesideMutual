@@ -32,4 +32,27 @@ public class WebConfiguration implements WebMvcConfigurer {
 	public Filter shallowETagHeaderFilter() {
 		return new ShallowEtagHeaderFilter();
 	}
+
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedOrigins("*")
+				.allowedMethods("GET", "POST", "PUT", "DELETE")
+				.allowedHeaders("*");
+	}
+
+	@Override
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**") // Erlaubt CORS-Anfragen für alle Pfade
+                        .allowedOrigins("*") // Erlaubt CORS-Anfragen von allen Ursprüngen
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Erlaubte Methoden
+                        .allowedHeaders("*") // Erlaubt alle Header
+                        .allowCredentials(true); // Erlaubt Credentials
+            }
+        };
+    }
 }
