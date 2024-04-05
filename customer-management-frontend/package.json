@@ -27,12 +27,13 @@
   },
   "scripts": {
     "prestart": "react-env",
-    "start": "react-scripts start",
+    "start": "serve -s build",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "doc": "documentation build src/** -f html -o docs",
-    "flow": "flow"
+    "flow": "flow",
+    "dev": "react-scripts start"
   },
   "prettier": {
     "trailingComma": "es5",
