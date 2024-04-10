@@ -49,7 +49,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 		final APIKeyAuthFilter filter = new APIKeyAuthFilter(apiKeyHeader);
 		filter.setAuthenticationManager(new APIKeyAuthenticationManager(validAPIKeys));
 
-		httpSecurity.headers().frameOptions().disable().and().csrf().disable().exceptionHandling()
+		httpSecurity.cors().and().headers().frameOptions().disable().and().csrf().disable().exceptionHandling()
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
 		.addFilter(filter).authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest().authenticated();
 

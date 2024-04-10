@@ -38,11 +38,18 @@ public class WebConfiguration implements WebMvcConfigurer {
 		return new ShallowEtagHeaderFilter();
 	}
 
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**") // Erlaubt CORS-Anfragen für alle Pfade
-				.allowedOrigins("*") // Erlaubt CORS-Anfragen von allen Ursprüngen
-				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Erlaubte Methoden
-				.allowedHeaders("*"); // Erlaubt alle Headers
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+		return new WebMvcConfigurer() {
+			@Override
+			public void addCorsMappings(CorsRegistry registry) {
+				registry.addMapping("/**")
+						.allowedOrigins("https://lakesidemutualcore-production.up.railway.app")
+						.allowedMethods("GET", "POST", "PUT", "DELETE")
+						.allowedHeaders("*")
+						.allowCredentials(true)
+						.maxAge(3600);
+			}
+		};
 	}
 }
