@@ -12,8 +12,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 
 /**
- * The WebSecurityConfiguration class configures the security policies used for the exposed HTTP resource API.
- * In this case, it ensures that only clients with a valid API key can access the API.
+ * The WebSecurityConfiguration class configures the security policies used for
+ * the exposed HTTP resource API.
+ * In this case, it ensures that only clients with a valid API key can access
+ * the API.
  */
 @Configuration
 @EnableWebSecurity
@@ -45,13 +47,16 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		final List<String> validAPIKeys = Arrays.asList(apiKeyValidKeys.split(";"));
-		final APIKeyAuthFilter filter = new APIKeyAuthFilter(apiKeyHeader);
+		List<String> validAPIKeys = Arrays.asList(apiKeyValidKeys.split(";"));
+		APIKeyAuthFilter filter = new APIKeyAuthFilter(apiKeyHeader);
 		filter.setAuthenticationManager(new APIKeyAuthenticationManager(validAPIKeys));
 
 		httpSecurity.headers().frameOptions().disable().and().csrf().disable().exceptionHandling()
-		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-		.addFilter(filter).authorizeRequests().antMatchers(AUTH_WHITELIST).permitAll().anyRequest().authenticated();
+				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.addFilter(filter).authorizeRequests()
+				.antMatchers("/", "/home").permitAll() // Allow access to home or root without API key
+				.antMatchers(AUTH_WHITELIST).permitAll()
+				.anyRequest().authenticated();
 
 		// Disable Cache-Control for Conditional Requests
 		httpSecurity.headers().cacheControl().disable();
