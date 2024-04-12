@@ -3,11 +3,14 @@ package com.lakesidemutual.customercore.interfaces.configuration;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The SwaggerConfiguration class configures the HTTP resource API documentation.
+ * The SwaggerConfiguration class configures the HTTP resource API
+ * documentation.
  */
 @Configuration
 public class SwaggerConfiguration {
@@ -16,8 +19,17 @@ public class SwaggerConfiguration {
 	public OpenAPI customerSelfServiceApi() {
 		return new OpenAPI()
 				.info(new Info().title("Customer Core API")
-						.description("This API allows clients to create new customers and retrieve details about existing customers.")
+						.description(
+								"This API allows clients to create new customers and retrieve details about existing customers.")
 						.version("v1.0.0")
 						.license(new License().name("Apache 2.0")));
+	}
+
+	@Bean
+	public GroupedOpenApi publicApi() {
+		return GroupedOpenApi.builder()
+				.group("springshop-public")
+				.pathsToMatch("/**")
+				.build();
 	}
 }
