@@ -14,6 +14,6 @@ FROM openjdk:17-slim-buster
 
 COPY --from=build target/customer-core-0.0.1-SNAPSHOT.jar .
 
-EXPOSE $PORT
+EXPOSE 8110
 
 ENTRYPOINT ["java", "-jar", "customer-core-0.0.1-SNAPSHOT.jar"]
