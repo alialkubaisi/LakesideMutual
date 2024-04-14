@@ -42,7 +42,7 @@ public class WebConfiguration implements WebMvcConfigurer {
 	public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/**")
 				.allowedOrigins("https://lakesidemutualcore-production.up.railway.app", "http://localhost:3000",
-						"http://localhost:8110", "http://localhost:8080", "localhost:8100")
+						"http://localhost:8110", "http://localhost:8080", "localhost:8100", "https://lakesidemutualbackend-production-f91e.up.railway.app:8110", "https://lakesidemutualbackend-production-f91e.up.railway.app")
 				.allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
 				.allowedHeaders("*")
 				.allowCredentials(true);
