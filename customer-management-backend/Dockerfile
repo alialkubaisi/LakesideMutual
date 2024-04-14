@@ -14,6 +14,6 @@ FROM openjdk:17-slim-buster
 
 COPY --from=build target/customer-management-backend-0.0.1-SNAPSHOT.jar .
 
-EXPOSE 8100
+#EXPOSE 8100
 
 ENTRYPOINT ["java", "-jar", "customer-management-backend-0.0.1-SNAPSHOT.jar"]
