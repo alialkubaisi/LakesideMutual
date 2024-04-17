@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
+    "serve": "^14.2.1",
     "@beam-australia/react-env": "^3.1.1",
     "flow-bin": "^0.196.3",
     "react-scripts": "5.0.1",
@@ -26,8 +27,9 @@
     "whatwg-fetch": "^3.6.2"
   },
   "scripts": {
+    "start": "serve -s build",
+    "dev": "react-scripts start",
     "prestart": "react-env",
-    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
