@@ -27,7 +27,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "scripts": {
-    "start": "serve -s build -l tcp://0.0.0.0:${PORT:-3020}",
+    "start": "npx http-server ./build -p $PORT -a 0.0.0.0 --proxy http://localhost:$PORT?",
     "dev": "react-scripts start",
     "prestart": "react-env",
     "build": "react-scripts build",
