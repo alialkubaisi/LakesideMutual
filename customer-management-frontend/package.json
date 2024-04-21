@@ -27,8 +27,8 @@
     "whatwg-fetch": "^3.6.2"
   },
   "scripts": {
-    "start": "npx http-server ./build -p $PORT -a 0.0.0.0 --proxy http://localhost:$PORT?",
-    "dev": "react-scripts start",
+    "dev": "npx http-server ./build -p $PORT -a 0.0.0.0 --proxy http://localhost:$PORT?",
+    "start": "react-scripts start",
     "prestart": "react-env",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
